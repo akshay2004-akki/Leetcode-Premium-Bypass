@@ -925,12 +925,23 @@ async function waitAndContinue() {
             fetchData() {
                 return this.fetchProblemFrequencyData()
             }
-            async fetchProblemFrequencyData() {
-                let e = C.getUrl("Problem!A:B"),
-                    t = await fetch(e),
-                    n = await t.json();
-                return this.parseProblemFrequencyData(n.values)
-            }
+            async function fetchProblemFrequencyData() {
+    try {
+        const url = C.getUrl("Problem!A:B");
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json();
+        return parseProblemFrequencyData(data.values);
+    } catch (error) {
+        console.error('Error fetching problem frequency data:', error);
+        return null; // or handle the error appropriately
+    }
+}
+
             parseProblemFrequencyData(e) {
                 let t = {};
                 for (let n = 0; n <= e.length - 1; n++) {
